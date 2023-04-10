@@ -1,16 +1,18 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.KalkulatorStrbad" parent="Theme.Material3.Light">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+    <style name="Theme.KalkulatorStrbad" parent="Theme.Material3.Light.NoActionBar" >
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.KalkulatorStrbadBlue" parent="Theme.KalkulatorStrbad">
+        <item name="android:textSize">10sp</item>
+        <item name="colorPrimary">@color/blue_700</item>
         <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.KalkulatorStrbadGreen" parent="Theme.KalkulatorStrbad">
+        <item name="android:textSize">20sp</item>
+        <item name="colorPrimary">@color/green_700</item>
+        <item name="colorOnPrimary">@color/white</item>
     </style>
 </resources>

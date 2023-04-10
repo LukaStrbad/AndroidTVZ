@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="amount">Menge</string>
+    <string name="convert">Konvertieren</string>
+    <string name="currency">Währung</string>
+    <string name="right_arrow">Rechter Pfeil</string>
+    <string name="conversion_display">%1$.5f %2$s ist gleich %3$.5f %4$s</string>
+    <string name="enter_amount">Währungsbetrag ist leer. Geben Sie einen Wert ein.</string>
+    <string name="convert_from">Konvertieren von</string>
+    <string name="convert_to">Konvertieren zu</string>
+    <string name="theme">Thema</string>
+
+    <string-array name="app_themes">
+        <item>Standard</item>
+        <item>Blau</item>
+        <item>Grün</item>
+    </string-array>
+</resources>

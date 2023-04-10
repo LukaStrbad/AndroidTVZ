@@ -1,10 +1,10 @@
 package hr.tvz.android.kalkulatorstrbad
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.coroutineScope
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -17,16 +17,24 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
+
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    val exchangeRates = mutableListOf<ExchangeRate>()
-    val currencies = mutableListOf("EUR")
-
-    var currencyFrom = "EUR"
-    var currencyTo = "EUR"
+    private val exchangeRates = mutableListOf<ExchangeRate>()
+    private val currencies = mutableListOf("EUR")
+    private var currencyFrom = "EUR"
+    private var currencyTo = "EUR"
+    private var appTheme = R.style.Theme_KalkulatorStrbad
+    private lateinit var themes: List<Pair<String, Int>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        savedInstanceState?.getInt(THEME_KEY, R.style.Theme_KalkulatorStrbad)?.let {
+            println("TEMA JE DEFAULT: ${it == R.style.Theme_KalkulatorStrbad}")
+            appTheme = it
+        }
+        setTheme(appTheme)
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -48,6 +56,7 @@ class MainActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Clear the error if the user enters some value
                 binding.currencyAmountTextInput.error = null
             }
 
@@ -63,11 +72,33 @@ class MainActivity : AppCompatActivity() {
             ?.setOnItemClickListener { _, _, _, _ ->
                 currencyTo = binding.currencyToSpinner.editText?.text.toString()
             }
+
+        val themeArray = resources.getStringArray(R.array.app_themes)
+        themes = themeArray.mapIndexed { index, s ->
+            // Map a theme to the corresponding index
+            val themeId = when (index) {
+                0 -> R.style.Theme_KalkulatorStrbad
+                1 -> R.style.Theme_KalkulatorStrbadBlue
+                2 -> R.style.Theme_KalkulatorStrbadGreen
+                else -> throw IndexOutOfBoundsException("Theme index was out of bounds")
+            }
+
+            Pair(s, themeId)
+        }
+
+        (binding.themeSelector.editText as? MaterialAutoCompleteTextView)?.apply {
+            setSimpleItems(themes.map { it.first }.toTypedArray())
+            // Find string format of the selected string
+            setText(themes.first { it.second == appTheme }.first, false)
+
+            setOnItemClickListener { _, _, _, _ -> changeTheme(this) }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
+        // Save app state to a Bundle
         outState.putString(AMOUNT_KEY, binding.currencyAmountTextInput.text?.toString())
         outState.putString(
             CURRENCY_FROM_KEY,
@@ -75,6 +106,7 @@ class MainActivity : AppCompatActivity() {
         )
         outState.putString(CURRENCY_TO_KEY, binding.currencyToSpinner.editText?.text?.toString())
         outState.putString(CONVERSION_TEXT_KEY, binding.conversionTextView.text?.toString())
+        outState.putInt(THEME_KEY, appTheme)
     }
 
     private fun setCurrencySpinnerAdapter(
@@ -96,6 +128,8 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         val client = HttpClient()
+
+        // Fetch exchange rates
         lifecycle.coroutineScope.launch {
             val response = client.request(TECAJ_URL)
             exchangeRates.addAll(Json.decodeFromString<List<ExchangeRate>>(response.body()))
@@ -115,20 +149,35 @@ class MainActivity : AppCompatActivity() {
 
         var converted = amount
 
+        // Convert to EUR if currency is not EUR
         if (currencyFrom != "EUR") {
             val exchangeRate = exchangeRates.find { it.valuta == currencyFrom } ?: return
 
             converted /= exchangeRate.srednjiTecaj.replace(',', '.').toDouble()
         }
 
+        // Convert to requested currency if currency is not EUR
         if (currencyTo != "EUR") {
             val exchangeRate = exchangeRates.find { it.valuta == currencyTo } ?: return
 
             converted *= exchangeRate.srednjiTecaj.replace(',', '.').toDouble()
         }
 
+        // Display value
         binding.conversionTextView.text =
             getString(R.string.conversion_display, amount, currencyFrom, converted, currencyTo)
+    }
+
+    private fun changeTheme(dropDown: MaterialAutoCompleteTextView) {
+        appTheme = binding.themeSelector.editText?.text.toString().let { selectedTheme ->
+            // Find theme id with selected text from the dropdown
+            themes.first { it.first == selectedTheme }.second
+        }
+        // Both method calls are necessary to dismissDropDown
+        dropDown.dismissDropDown()
+        dropDown.clearFocus()
+        // Recreate activity to apply selected theme
+        recreate()
     }
 
     companion object {
@@ -137,5 +186,6 @@ class MainActivity : AppCompatActivity() {
         private const val CURRENCY_FROM_KEY = "currencyFrom"
         private const val CURRENCY_TO_KEY = "currencyTo"
         private const val CONVERSION_TEXT_KEY = "conversionText"
+        private const val THEME_KEY = "appTheme"
     }
 }

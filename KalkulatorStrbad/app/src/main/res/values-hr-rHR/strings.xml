@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="amount">Iznos</string>
+    <string name="convert">Pretvori</string>
+    <string name="currency">Valuta</string>
+    <string name="right_arrow">Desna strelica</string>
+    <string name="conversion_display">%1$.5f %2$s je jednako %3$.5f %4$s</string>
+    <string name="enter_amount">Iznos je prazan. Unesi vrijednost</string>
+    <string name="convert_from">Pretvori sa</string>
+    <string name="convert_to">Pretvori u</string>
+    <string name="theme">Tema</string>
+
+    <string-array name="app_themes">
+        <item>Zadana</item>
+        <item>Plava</item>
+        <item>Zelena</item>
+    </string-array>
+</resources>
