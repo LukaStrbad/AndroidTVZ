@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         savedInstanceState?.getInt(THEME_KEY, R.style.Theme_KalkulatorStrbad)?.let {
-            println("TEMA JE DEFAULT: ${it == R.style.Theme_KalkulatorStrbad}")
             appTheme = it
         }
         setTheme(appTheme)
