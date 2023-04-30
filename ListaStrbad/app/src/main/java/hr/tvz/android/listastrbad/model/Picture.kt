@@ -1,16 +1,12 @@
 package hr.tvz.android.listastrbad.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-@Serializable
+@Parcelize
 data class Picture(
-    val copyright: String? = null,
-    val date: String,
-    val explanation: String,
-    val hdurl: String? = null,
-    val url: String,
-    @SerialName("media_type") val mediaType: String,
-    @SerialName("service_version") val serviceVersion: String,
-    val title: String
-)
+    val title: String,
+    val description: String,
+    val pictureResource: Int,
+    val webLink: String
+) : Parcelable
