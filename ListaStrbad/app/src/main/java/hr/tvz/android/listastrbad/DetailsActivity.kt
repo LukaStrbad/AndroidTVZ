@@ -1,8 +1,10 @@
 package hr.tvz.android.listastrbad
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import hr.tvz.android.listastrbad.databinding.ActivityDetailsBinding
@@ -35,6 +37,26 @@ class DetailsActivity : AppCompatActivity() {
             pictureDetailsLinkButton.setOnClickListener {
                 val browserIntent = Intent(Intent.ACTION_VIEW, picture.webLink.toUri())
                 startActivity(browserIntent)
+            }
+
+            pictureDetailsShareButton.setOnClickListener {
+                val dialog = AlertDialog.Builder(this@DetailsActivity).run {
+                    setMessage(getString(R.string.share_message))
+                    setTitle(getString(R.string.share))
+
+                    setPositiveButton(R.string.yes) { _, _ ->
+                        Intent().also { intent ->
+                            intent.action = "hr.tvz.android.listastrbad.SHARE"
+                            intent.putExtra("picture", picture)
+                            sendBroadcast(intent)
+                        }
+                    }
+                    setNegativeButton(R.string.no) { _, _ -> /* Ignored */ }
+
+                    create()
+                }
+
+                dialog.show()
             }
         }
     }

@@ -12,4 +12,11 @@
     <string name="picture14_title">Portret NGC 3628</string>
     <string name="picture14_desc">Oštri teleskopski prikazi NGC 3628 pokazuju pufnasti galaktički disk podijeljen tamnim trakama prašine. Naravno, ovaj portret veličanstvene spiralne galaksije s rubom stavlja neke astronome na pamet njezinog popularnog nadimka, galaksije Hamburger. Također otkriva malu galaksiju u blizini (ispod), vjerojatno satelit NGC 3628, i vrlo slab, ali opsežan plimni rep. Izvučeni rep proteže se oko 300 000 svjetlosnih godina, čak i iza lijevog ruba okvira. NGC 3628 dijeli svoje susjedstvo u lokalnom svemiru s dvije druge velike spirale M65 i M66 u grupi inače poznatoj kao trostruki lav. Gravitacijske interakcije s kozmičkim susjedima vjerojatno su odgovorne za stvaranje plimnog repa, kao i proširenog bljeskanja i iskrivljenja diska ove spirale. Sam primamljivi otočni svemir širok je oko 100 000 svjetlosnih godina i udaljen je 35 milijuna svjetlosnih godina u sjevernom proljetnom zviježđu Lava.</string>
     <string name="open_webpage">Otvori u web pregledniku</string>
+    <string name="share">Podijeli</string>
+    <string name="power_connected">Napajanje uključeno</string>
+    <string name="power_disconnected">Napajanje isključeno</string>
+    <string name="unknown_action">Nepoznata akcija</string>
+    <string name="share_message">Želite li podijeliti ovu sliku?</string>
+    <string name="yes">Da</string>
+    <string name="no">Ne</string>
 </resources>

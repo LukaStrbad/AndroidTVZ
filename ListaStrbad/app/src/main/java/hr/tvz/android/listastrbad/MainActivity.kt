@@ -44,9 +44,9 @@ class MainActivity : AppCompatActivity() {
                         Log.d("BroadcastReceiver", log)
 
                         val snackbarText = when (intent.action) {
-                            Intent.ACTION_POWER_CONNECTED -> "Power connected"
-                            Intent.ACTION_POWER_DISCONNECTED -> "Power disconnected"
-                            else -> "Unknown action"
+                            Intent.ACTION_POWER_CONNECTED -> getString(R.string.power_connected)
+                            Intent.ACTION_POWER_DISCONNECTED -> getString(R.string.power_disconnected)
+                            else -> getString(R.string.unknown_action)
                         }
 
                         Snackbar.make(binding.root, snackbarText, Snackbar.LENGTH_LONG).show()

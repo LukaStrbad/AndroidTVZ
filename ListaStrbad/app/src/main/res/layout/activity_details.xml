@@ -37,6 +37,12 @@
         android:id="@+id/picture_details_link_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/open_webpage"/>
+        android:text="@string/open_webpage" />
+
+    <Button
+        android:id="@+id/picture_details_share_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/share" />
 
 </LinearLayout>
