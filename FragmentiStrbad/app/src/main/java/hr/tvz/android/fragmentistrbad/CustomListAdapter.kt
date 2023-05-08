@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import hr.tvz.android.fragmentistrbad.databinding.ListItemBinding
 import hr.tvz.android.fragmentistrbad.model.Picture
 
@@ -28,7 +30,7 @@ class CustomListAdapter(private val dataSet: List<Picture>, private val itemClic
 
             listItemCard.setOnClickListener { itemClick.onPictureClick(picture) }
             listItemTitle.text = picture.title
-            listPicture.setImageResource(picture.pictureResource)
+            listPicture.load(picture.pictureUrl)
 
             setAnimation(root, position)
         }

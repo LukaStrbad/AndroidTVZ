@@ -1,53 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.fragment.app.FragmentContainerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_details_fragment_container_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        tools:context=".DetailsActivity">
-
-        <ImageView
-            android:id="@+id/picture_details_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/picture_2023_04_10" />
-
-        <TextView
-            android:id="@+id/picture_details_title"
-            style="?attr/textAppearanceTitleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:padding="8dp"
-            android:text="@string/picture10_title" />
-
-        <TextView
-            android:id="@+id/picture_details_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
-            android:text="@string/picture10_desc" />
-
-        <Button
-            android:id="@+id/picture_details_link_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/open_webpage" />
-
-        <Button
-            android:id="@+id/picture_details_share_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/share" />
-
-    </LinearLayout>
-</ScrollView>
+</androidx.fragment.app.FragmentContainerView>

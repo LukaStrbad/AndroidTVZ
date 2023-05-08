@@ -11,10 +11,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import hr.tvz.android.fragmentistrbad.databinding.FragmentListBinding
 import hr.tvz.android.fragmentistrbad.model.Picture
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ListFragment : Fragment(), ItemClick {
     private var _binding: FragmentListBinding? = null
@@ -25,12 +29,23 @@ class ListFragment : Fragment(), ItemClick {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val pictures = getPictures()
-
         _binding = FragmentListBinding.inflate(inflater, container, false)
-        binding.listRecyclerView.apply {
-            adapter = CustomListAdapter(List(100) { pictures }.flatten(), this@ListFragment)
-            layoutManager = LinearLayoutManager(this@ListFragment.requireActivity())
+
+        lifecycleScope.launch(Dispatchers.IO) {
+
+            val db = Room.databaseBuilder(
+                requireActivity().applicationContext,
+                AppDatabase::class.java, "picture-database"
+            ).createFromAsset("database/picture.db").build()
+            val pictureDao = db.pictureDao()
+            val pictures = pictureDao.getAll()
+
+            lifecycleScope.launch {
+                binding.listRecyclerView.apply {
+                    adapter = CustomListAdapter(pictures, this@ListFragment)
+                    layoutManager = LinearLayoutManager(this@ListFragment.requireActivity())
+                }
+            }
         }
 
         val br: BroadcastReceiver = object : BroadcastReceiver() {
@@ -83,39 +98,6 @@ class ListFragment : Fragment(), ItemClick {
         check(context is ItemClick) { "Activity must implement ItemClick interface" }
         itemClick = context
     }
-
-    private fun getPictures() = listOf(
-        Picture(
-            getString(R.string.picture10_title),
-            getString(R.string.picture10_desc),
-            R.drawable.picture_2023_04_10,
-            "https://apod.nasa.gov/apod/ap230410.html"
-        ),
-        Picture(
-            getString(R.string.picture11_title),
-            getString(R.string.picture11_desc),
-            R.drawable.picture_2023_04_11,
-            "https://apod.nasa.gov/apod/ap230411.html"
-        ),
-        Picture(
-            getString(R.string.picture12_title),
-            getString(R.string.picture12_desc),
-            R.drawable.picture_2023_04_12,
-            "https://apod.nasa.gov/apod/ap230412.html"
-        ),
-        Picture(
-            getString(R.string.picture13_title),
-            getString(R.string.picture13_desc),
-            R.drawable.picture_2023_04_13,
-            "https://apod.nasa.gov/apod/ap230413.html"
-        ),
-        Picture(
-            getString(R.string.picture14_title),
-            getString(R.string.picture14_desc),
-            R.drawable.picture_2023_04_14,
-            "https://apod.nasa.gov/apod/ap230414.html"
-        ),
-    )
 
     override fun onPictureClick(picture: Picture) {
         itemClick?.onPictureClick(picture)

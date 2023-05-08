@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "725460733355",
+    "project_id": "android-fragmenti",
+    "storage_bucket": "android-fragmenti.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725460733355:android:c4d9bad632b79f93a616ee",
+        "android_client_info": {
+          "package_name": "hr.tvz.android.fragmentistrbad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "725460733355-8jha95adqb3khdhck1599i88t3keg8lu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPqAXXTZWQVtKH0H9KvUQAwoP9vqjcqXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "725460733355-8jha95adqb3khdhck1599i88t3keg8lu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
