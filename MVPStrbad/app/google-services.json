@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1009914698279",
+    "project_id": "android-mvp-5e1c5",
+    "storage_bucket": "android-mvp-5e1c5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009914698279:android:5b45a587d298c899594c02",
+        "android_client_info": {
+          "package_name": "hr.tvz.android.mvpstrbad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1009914698279-3i5pnnrgcvv0i2cdav793ukl7jd6th4l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcFpvEC3RMrHj8Sc_mtkAxKHje4slMYHY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1009914698279-3i5pnnrgcvv0i2cdav793ukl7jd6th4l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
