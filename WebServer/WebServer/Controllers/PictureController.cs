@@ -19,15 +19,13 @@ public class PictureController : ControllerBase
 
     private Picture MapPictureImage(Picture picture)
     {
-        
-        var serverIp = Request.HttpContext.Connection.LocalIpAddress?.MapToIPv4();
-        var serverPort = Request.HttpContext.Connection.LocalPort;
+        var host = Request.HttpContext.Request.Host;
         var isHttps = Request.IsHttps;
 
         var http = isHttps ? "https" : "http";
         return picture with
         {
-            Image = $"{http}://{serverIp}:{serverPort}/images/{picture.Image}"
+            Image = $"{http}://{host}/images/{picture.Image}"
         };
     }
 
