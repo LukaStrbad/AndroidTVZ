@@ -8,14 +8,25 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.SavedStateViewModelFactory
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import coil.load
 import hr.tvz.android.mvpstrbad.databinding.FragmentListDetailBinding
 import hr.tvz.android.mvpstrbad.extensions.parcelable
 import hr.tvz.android.mvpstrbad.model.Picture
+import hr.tvz.android.mvpstrbad.viewmodels.ListDetailViewModel
+import kotlinx.coroutines.launch
 
 class ListDetailFragment : Fragment() {
     private var _binding: FragmentListDetailBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: ListDetailViewModel by viewModels {
+        SavedStateViewModelFactory(requireActivity().application, this, arguments)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,52 +34,36 @@ class ListDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentListDetailBinding.inflate(inflater, container, false)
-
-        val picture = arguments?.parcelable<Picture>("picture")
+        binding.viewModel = viewModel
 
         binding.run {
-            pictureDetailsTitle.text = picture?.title
-            pictureDetailsDescription.text = picture?.description
+            pictureDetailsImage.load(viewModel?.image)
+        }
 
-            pictureDetailsImage.load(picture?.pictureUrl)
-            pictureDetailsImage.setOnClickListener {
-                val intent =
-                    Intent(this@ListDetailFragment.requireActivity(), PictureViewActivity::class.java)
-                intent.putExtra("picture", picture)
-                startActivity(intent)
-            }
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.shareState.collect { state ->
+                    if (state) {
+                        val dialog =
+                            AlertDialog.Builder(this@ListDetailFragment.requireActivity()).run {
+                                setMessage(getString(R.string.share_message))
+                                setTitle(getString(R.string.share))
 
-            pictureDetailsLinkButton.visibility = View.GONE
-            if (picture != null) {
-                pictureDetailsLinkButton.visibility = View.VISIBLE
-                pictureDetailsLinkButton.setOnClickListener {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, picture.webLink.toUri())
-                    startActivity(browserIntent)
+                                setPositiveButton(R.string.yes) { _, _ ->
+                                    Intent().also { intent ->
+                                        intent.action = "hr.tvz.android.fragmentistrbad.SHARE"
+                                        intent.putExtra("picture", viewModel.picture)
+                                        this@ListDetailFragment.requireActivity()
+                                            .sendBroadcast(intent)
+                                    }
+                                }
+                                setNegativeButton(R.string.no) { _, _ -> /* Ignored */ }
 
-                }
-            }
-
-            pictureDetailsShareButton.visibility = View.GONE
-            if (picture!= null) {
-                pictureDetailsShareButton.visibility = View.VISIBLE
-                pictureDetailsShareButton.setOnClickListener {
-                    val dialog = AlertDialog.Builder(this@ListDetailFragment.requireActivity()).run {
-                        setMessage(getString(R.string.share_message))
-                        setTitle(getString(R.string.share))
-
-                        setPositiveButton(R.string.yes) { _, _ ->
-                            Intent().also { intent ->
-                                intent.action = "hr.tvz.android.fragmentistrbad.SHARE"
-                                intent.putExtra("picture", picture)
-                                this@ListDetailFragment.requireActivity().sendBroadcast(intent)
+                                create()
                             }
-                        }
-                        setNegativeButton(R.string.no) { _, _ -> /* Ignored */ }
 
-                        create()
+                        dialog.show()
                     }
-
-                    dialog.show()
                 }
             }
         }

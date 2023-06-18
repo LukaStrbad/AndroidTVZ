@@ -18,4 +18,8 @@
     <string name="share_message">¿Quieres compartir esta imagen?</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
+    <string name="add_widget">Añadir widget</string>
+    <string name="app_widget_description">Esta es una descripción del widget de la aplicación.</string>
+    <string name="play_music">Reproducir música</string>
+    <string name="pause_music">Pausa musica</string>
 </resources>

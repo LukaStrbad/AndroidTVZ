@@ -5,13 +5,16 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Parcelize
-@Entity
+@Serializable
 data class Picture(
-    @PrimaryKey val id: Int,
-    @ColumnInfo(name = "title") val title: String,
-    @ColumnInfo(name = "description") val description: String,
-    @ColumnInfo(name = "url") val pictureUrl: String,
-    @ColumnInfo(name = "web_link") val webLink: String
+    @SerialName("id") val id: Int,
+    @SerialName("title") val title: String,
+    @SerialName("date") val date: String,
+    @SerialName("description") val description: String,
+    @SerialName("image") val image: String,
+    @SerialName("web_link") val webLink: String
 ) : Parcelable

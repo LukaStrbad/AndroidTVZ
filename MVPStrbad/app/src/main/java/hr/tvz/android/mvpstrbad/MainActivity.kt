@@ -25,7 +25,6 @@ import hr.tvz.android.mvpstrbad.model.Picture
 
 class MainActivity : AppCompatActivity(), ItemClick {
     private lateinit var binding: ActivityMainBinding
-    private var twoPane = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,5 +137,6 @@ class MainActivity : AppCompatActivity(), ItemClick {
 
     companion object {
         private const val CHANNEL_ID = "hr.tvz.android.mvpstrbad.firebase_notification"
+        var twoPane = false
     }
 }

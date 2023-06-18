@@ -1,53 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <data>
+
+        <variable
+            name="viewModel"
+            type="hr.tvz.android.mvpstrbad.viewmodels.ListDetailViewModel" />
+    </data>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        tools:context=".DetailsActivity">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/picture_details_image"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/picture_2023_04_10" />
+            android:fitsSystemWindows="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            tools:context=".DetailsActivity">
 
-        <TextView
-            android:id="@+id/picture_details_title"
-            style="?attr/textAppearanceTitleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:padding="8dp"
-            android:text="@string/picture10_title" />
+            <ImageView
+                android:id="@+id/picture_details_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:onClick="@{() -> viewModel.onPictureClick()}"
+                android:scaleType="centerCrop"
+                android:src="@drawable/picture_2023_04_10" />
 
-        <TextView
-            android:id="@+id/picture_details_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
-            android:text="@string/picture10_desc" />
+            <TextView
+                android:id="@+id/picture_details_title"
+                style="?attr/textAppearanceTitleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="8dp"
+                android:text="@{viewModel.title}" />
 
-        <Button
-            android:id="@+id/picture_details_link_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/open_webpage" />
+            <TextView
+                android:id="@+id/picture_details_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
+                android:text="@{viewModel.description}" />
 
-        <Button
-            android:id="@+id/picture_details_share_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/share" />
+            <Button
+                android:id="@+id/picture_details_link_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> viewModel.onLinkClick()}"
+                android:text="@string/open_webpage" />
 
-    </LinearLayout>
-</ScrollView>
+            <Button
+                android:id="@+id/picture_details_share_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> viewModel.onShareClick()}"
+                android:text="@string/share" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> viewModel.onPlayClick()}"
+                    android:text="@string/play_music" />
+
+                <Space
+                    android:layout_width="16dp"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> viewModel.onPauseClick()}"
+                    android:text="@string/pause_music" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</layout>

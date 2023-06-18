@@ -18,6 +18,6 @@ class PictureViewActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val picture = intent.parcelable<Picture>("picture")!!
-        binding.pictureViewImage.load(picture.pictureUrl)
+        binding.pictureViewImage.load(picture.image)
     }
 }

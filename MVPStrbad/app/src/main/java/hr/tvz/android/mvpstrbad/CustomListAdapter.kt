@@ -9,8 +9,14 @@ import coil.load
 import hr.tvz.android.mvpstrbad.databinding.ListItemBinding
 import hr.tvz.android.mvpstrbad.model.Picture
 
-class CustomListAdapter(private val dataSet: List<Picture>, private val itemClick: ItemClick) :
+class CustomListAdapter(dataSet: List<Picture>, private val itemClick: ItemClick) :
     RecyclerView.Adapter<CustomListAdapter.ViewHolder>() {
+
+    private val dataSet: List<Picture>
+
+    init {
+        this.dataSet = dataSet.sortedBy { it.date }.reversed()
+    }
 
     private var lastPosition = -1
 
@@ -28,7 +34,7 @@ class CustomListAdapter(private val dataSet: List<Picture>, private val itemClic
 
             listItemCard.setOnClickListener { itemClick.onPictureClick(picture) }
             listItemTitle.text = picture.title
-            listPicture.load(picture.pictureUrl)
+            listPicture.load(picture.image)
 
             setAnimation(root, position)
         }

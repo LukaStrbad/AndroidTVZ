@@ -18,4 +18,8 @@
     <string name="share_message">Želite li podijeliti ovu sliku?</string>
     <string name="yes">Da</string>
     <string name="no">Ne</string>
+    <string name="add_widget">Dodaj widget</string>
+    <string name="app_widget_description">Ovo je opis widgeta</string>
+    <string name="play_music">Pusti glazbu</string>
+    <string name="pause_music">Pauziraj glazbu</string>
 </resources>

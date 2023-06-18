@@ -6,24 +6,32 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import hr.tvz.android.mvpstrbad.databinding.FragmentListBinding
 import hr.tvz.android.mvpstrbad.model.Picture
-import kotlinx.coroutines.Dispatchers
+import hr.tvz.android.mvpstrbad.viewmodels.ListViewModel
 import kotlinx.coroutines.launch
+
 
 class ListFragment : Fragment(), ItemClick {
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
     private var itemClick: ItemClick? = null
+
+    private val viewModel: ListViewModel by viewModels {
+        SavedStateViewModelFactory(requireActivity().application, this, arguments)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,19 +39,13 @@ class ListFragment : Fragment(), ItemClick {
     ): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
 
-        lifecycleScope.launch(Dispatchers.IO) {
-
-            val db = Room.databaseBuilder(
-                requireActivity().applicationContext,
-                AppDatabase::class.java, "picture-database"
-            ).createFromAsset("database/picture.db").build()
-            val pictureDao = db.pictureDao()
-            val pictures = pictureDao.getAll()
-
-            lifecycleScope.launch {
-                binding.listRecyclerView.apply {
-                    adapter = CustomListAdapter(pictures, this@ListFragment)
-                    layoutManager = LinearLayoutManager(this@ListFragment.requireActivity())
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.pictures.observe(viewLifecycleOwner) { pictures ->
+                    binding.listRecyclerView.apply {
+                        layoutManager = LinearLayoutManager(requireContext())
+                        adapter = CustomListAdapter(pictures, this@ListFragment)
+                    }
                 }
             }
         }
