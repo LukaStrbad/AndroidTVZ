@@ -3,7 +3,9 @@ package hr.tvz.android.mvpstrbad
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
+import android.util.Log
 import android.widget.RemoteViews
 import coil.ImageLoader
 import coil.request.ImageRequest
@@ -14,6 +16,7 @@ import hr.tvz.android.mvpstrbad.webserver.WebServerService
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -38,6 +41,10 @@ class LatestPictureWidget : AppWidgetProvider() {
         }
     }
 
+    override fun onReceive(context: Context?, intent: Intent?) {
+        super.onReceive(context, intent)
+    }
+
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
     }
@@ -52,29 +59,38 @@ internal suspend fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    val retrofit = Retrofit.Builder()
-        .baseUrl(ListViewModel.API_URL)
-        .build()
-    val service = retrofit.create(WebServerService::class.java)
-    val response = service.getLatestPicture().awaitResponse()
-    if (!response.isSuccessful) {
-        return
-    }
-    val picture = Json.decodeFromString<Picture>(response.body()!!.string())
+    for (i in 0..10) {
+        try {
+            val retrofit = Retrofit.Builder()
+                .baseUrl(ListViewModel.API_URL)
+                .build()
+            val service = retrofit.create(WebServerService::class.java)
+            val response = service.getLatestPicture().awaitResponse()
+            if (!response.isSuccessful) {
+                return
+            }
 
-    val views = RemoteViews(context.packageName, R.layout.latest_picture_widget)
+            val body = response.body() ?: return
+            val picture = Json.decodeFromString<Picture>(body.string())
+            val views = RemoteViews(context.packageName, R.layout.latest_picture_widget)
 
-    val bitmap = withContext(Dispatchers.IO) {
-        val loader = ImageLoader(context)
-        val request = ImageRequest.Builder(context)
-            .data(picture.image)
-            .allowHardware(false)
-            .build()
-        val result = (loader.execute(request) as SuccessResult).drawable
-        (result as BitmapDrawable).bitmap
+            val bitmap = withContext(Dispatchers.IO) {
+                val loader = ImageLoader(context)
+                val request = ImageRequest.Builder(context)
+                    .data(picture.image)
+                    .allowHardware(false)
+                    .build()
+                val result = (loader.execute(request) as SuccessResult).drawable
+                (result as BitmapDrawable).bitmap
+            }
+            views.setTextViewText(R.id.widget_title, picture.title)
+            views.setImageViewBitmap(R.id.widget_image, bitmap)
+            // Instruct the widget manager to update the widget
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+            delay(1000)
+            break
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
-    views.setTextViewText(R.id.widget_title, picture.title)
-    views.setImageViewBitmap(R.id.widget_image, bitmap)
-    // Instruct the widget manager to update the widget
-    appWidgetManager.updateAppWidget(appWidgetId, views)
 }

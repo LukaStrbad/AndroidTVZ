@@ -20,13 +20,16 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                 .baseUrl(API_URL)
                 .build()
             val service = retrofit.create(WebServerService::class.java)
+
             val response = service.getAllPictures().awaitResponse()
             if (!response.isSuccessful) {
                 return@launch
             }
 
+            val body = response.body() ?: return@launch
+
             viewModelScope.launch {
-                pictures.value = Json.decodeFromString<List<Picture>>(response.body()!!.string())
+                pictures.value = Json.decodeFromString<List<Picture>>(body.string())
             }
         }
     }
