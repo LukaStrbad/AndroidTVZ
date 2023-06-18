@@ -59,38 +59,31 @@ internal suspend fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    for (i in 0..10) {
-        try {
-            val retrofit = Retrofit.Builder()
-                .baseUrl(ListViewModel.API_URL)
-                .build()
-            val service = retrofit.create(WebServerService::class.java)
-            val response = service.getLatestPicture().awaitResponse()
-            if (!response.isSuccessful) {
-                return
-            }
-
-            val body = response.body() ?: return
-            val picture = Json.decodeFromString<Picture>(body.string())
-            val views = RemoteViews(context.packageName, R.layout.latest_picture_widget)
-
-            val bitmap = withContext(Dispatchers.IO) {
-                val loader = ImageLoader(context)
-                val request = ImageRequest.Builder(context)
-                    .data(picture.image)
-                    .allowHardware(false)
-                    .build()
-                val result = (loader.execute(request) as SuccessResult).drawable
-                (result as BitmapDrawable).bitmap
-            }
-            views.setTextViewText(R.id.widget_title, picture.title)
-            views.setImageViewBitmap(R.id.widget_image, bitmap)
-            // Instruct the widget manager to update the widget
-            appWidgetManager.updateAppWidget(appWidgetId, views)
-            delay(1000)
-            break
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+    val retrofit = Retrofit.Builder()
+        .baseUrl(ListViewModel.API_URL)
+        .build()
+    val service = retrofit.create(WebServerService::class.java)
+    val response = service.getLatestPicture().awaitResponse()
+    if (!response.isSuccessful) {
+        return
     }
+
+    val body = response.body() ?: return
+    val picture = Json.decodeFromString<Picture>(body.string())
+    val views = RemoteViews(context.packageName, R.layout.latest_picture_widget)
+
+    val bitmap = withContext(Dispatchers.IO) {
+        val loader = ImageLoader(context)
+        val request = ImageRequest.Builder(context)
+            .data(picture.image)
+            .allowHardware(false)
+            .build()
+        val result = (loader.execute(request) as SuccessResult).drawable
+        (result as BitmapDrawable).bitmap
+    }
+    views.setTextViewText(R.id.widget_title, picture.title)
+    views.setImageViewBitmap(R.id.widget_image, bitmap)
+    // Instruct the widget manager to update the widget
+    appWidgetManager.updateAppWidget(appWidgetId, views)
+    delay(1000)
 }
