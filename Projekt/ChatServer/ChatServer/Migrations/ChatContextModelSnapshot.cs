@@ -47,7 +47,7 @@ namespace ChatServer.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("GroupId")
+                    b.Property<int>("GroupId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("SenderId")
@@ -127,15 +127,19 @@ namespace ChatServer.Migrations
 
             modelBuilder.Entity("ChatServer.Model.Message", b =>
                 {
-                    b.HasOne("ChatServer.Model.Group", null)
-                        .WithMany("Messages")
-                        .HasForeignKey("GroupId");
+                    b.HasOne("ChatServer.Model.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ChatServer.Model.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Group");
 
                     b.Navigation("Sender");
                 });
@@ -157,11 +161,6 @@ namespace ChatServer.Migrations
                     b.Navigation("Group");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ChatServer.Model.Group", b =>
-                {
-                    b.Navigation("Messages");
                 });
 #pragma warning restore 612, 618
         }

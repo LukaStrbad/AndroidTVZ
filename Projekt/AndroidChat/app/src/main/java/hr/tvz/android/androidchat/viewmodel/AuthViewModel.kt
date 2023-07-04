@@ -58,9 +58,9 @@ class AuthViewModel @Inject constructor(
     fun register() = viewModelScope.launch(Dispatchers.IO) {
         val response = authService.register(
             AuthRegister(
-                displayName,
-                username,
-                password
+                displayName = displayName,
+                username = username,
+                password = password
             )
         )
 

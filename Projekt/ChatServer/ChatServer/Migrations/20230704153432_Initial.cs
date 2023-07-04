@@ -55,9 +55,9 @@ namespace ChatServer.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     SenderId = table.Column<int>(type: "INTEGER", nullable: false),
+                    GroupId = table.Column<int>(type: "INTEGER", nullable: false),
                     Content = table.Column<string>(type: "TEXT", nullable: false),
-                    Time = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    GroupId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Time = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,7 +66,8 @@ namespace ChatServer.Migrations
                         name: "FK_Messages_Groups_GroupId",
                         column: x => x.GroupId,
                         principalTable: "Groups",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Messages_Users_SenderId",
                         column: x => x.SenderId,
