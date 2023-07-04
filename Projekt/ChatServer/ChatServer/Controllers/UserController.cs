@@ -75,11 +75,16 @@ public class UserController : UserControllerBase
         return new OkObjectResult(new AuthorizedUser(user.Username, stringToken));
     }
 
-    [HttpGet("getMessage")]
+    [HttpGet("profile")]
     [Authorize]
-    public ActionResult GetMessage()
+    public async Task<ActionResult<User>> Profile()
     {
-        return new OkObjectResult(User.FindFirst(ClaimTypes.Name)?.Value);
+        var user = await GetUserAsync();
+
+        if (user is null)
+            return new UnauthorizedResult();
+
+        return new OkObjectResult(user);
     }
 
     private string GetToken(User user)
@@ -103,5 +108,17 @@ public class UserController : UserControllerBase
 
         var tokenHandler = new JwtSecurityTokenHandler();
         return tokenHandler.WriteToken(token);
+    }
+
+    [HttpGet("getUsers")]
+    public async Task<ActionResult<List<User>>> GetUsers(string nameContains = "")
+    {
+        var containsLower = nameContains.ToLower();
+        var users = (await Db.Users
+                .ToListAsync())
+            .Where(u =>
+                u.Username.ToLower().Contains(containsLower) ||
+                u.DisplayName?.ToLower().Contains(containsLower) == true);
+        return new OkObjectResult(users);
     }
 }

@@ -89,21 +89,79 @@ public class GroupController : UserControllerBase
             .Select(ug => ug.User)
             .ToListAsync();
     }
-    
-    [HttpGet("{id:int}/messages"), Authorize]
-    public async Task<ActionResult<List<MessageResponse>>> Messages(int id)
+
+    [HttpPost("{groupId:int}/addMember"), Authorize]
+    public async Task<ActionResult> AddMember([FromRoute] int groupId, [FromBody] string username)
     {
         var user = await GetUserAsync();
         if (user is null)
             return new UnauthorizedResult();
 
-        var groupEntity = await Db.Groups.FirstOrDefaultAsync(g => g.Id == id);
+        var groupEntity = await Db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
         if (groupEntity is null)
             return NotFound();
 
-        return await Db.Messages
-            .Where(m => m.Group == groupEntity)
-            .Select(m => new MessageResponse(m.Sender.Username, m.Content, m.Time))
-            .ToListAsync();
+        var userGroup = await Db.UserGroups.FirstOrDefaultAsync(ug => ug.User == user && ug.Group == groupEntity);
+        if (userGroup is null)
+            return new UnauthorizedResult();
+
+        var member = await Db.Users.FirstOrDefaultAsync(u => u.Username == username);
+        if (member is null)
+            return NotFound();
+
+        Db.UserGroups.Add(new UserGroup
+        {
+            Group = userGroup.Group,
+            User = member
+        });
+        await Db.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    [HttpGet("{groupId:int}/amIOwner"), Authorize]
+    public async Task<ActionResult<bool>> AmIOwner([FromRoute] int groupId)
+    {
+        var user = await GetUserAsync();
+        if (user is null)
+            return new UnauthorizedResult();
+
+        var groupEntity = await Db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
+        if (groupEntity is null)
+            return NotFound();
+
+        return groupEntity.Owner == user;
+    }
+
+    [HttpPost("{groupId:int}/removeMember"), Authorize]
+    public async Task<ActionResult> RemoveMember([FromRoute] int groupId, [FromBody] string username)
+    {
+        var user = await GetUserAsync();
+        if (user is null)
+            return new UnauthorizedResult();
+
+        var groupEntity = await Db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
+        if (groupEntity is null)
+            return NotFound();
+
+        var userGroup = await Db.UserGroups.FirstOrDefaultAsync(ug => ug.User == user && ug.Group == groupEntity);
+        if (userGroup is null)
+            return new UnauthorizedResult();
+
+        if (groupEntity.Owner != user)
+            return new UnauthorizedResult();
+
+        var member = await Db.Users.FirstOrDefaultAsync(u => u.Username == username);
+        if (member is null)
+            return NotFound();
+
+        var memberGroup = await Db.UserGroups.FirstOrDefaultAsync(ug => ug.User == member && ug.Group == groupEntity);
+        if (memberGroup is null)
+            return NotFound();
+
+        Db.UserGroups.Remove(memberGroup);
+        await Db.SaveChangesAsync();
+
+        return Ok();
     }
 }
