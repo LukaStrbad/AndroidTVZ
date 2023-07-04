@@ -1,4 +1,6 @@
 package hr.tvz.android.androidchat.model
 
-class FormMessage {
-}
+data class FormMessage(
+    val groupId: Int,
+    val content: String
+)

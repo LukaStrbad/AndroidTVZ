@@ -1,3 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">AndroidChat</string>
+    <string name="prompt_username">Korisničko ime</string>
+    <string name="prompt_password">Lozinka</string>
+    <string name="action_sign_in">Prijavi se</string>
+    <string name="action_register">Registriraj se</string>
+    <string name="welcome">Dobro došli</string>
+    <string name="display_name">Nadimak</string>
+    <string name="register_instead">Registriraj se</string>
+    <string name="log_in_instead">Prijavi se</string>
+    <string name="log_out">Odjavi se</string>
+    <string name="view_members">Prikaži članove grupe</string>
+    <string name="add_member">Dodaj u grupu</string>
+    <string name="message">Poruka</string>
+    <string name="group_members">Članovi grupe</string>
+    <string name="create_group">Napravi grupu</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Odustani</string>
 </resources>
